@@ -1,0 +1,12 @@
+library(dplyr)
+data <- read.csv("../01_plis_relaps/data/data_full_with_fat.csv")
+
+
+data %>% mutate(test = OGIS( glucose_000,
+                             glucose_090,
+                             glucose_120,
+                             insulin_000,
+                             insulin_090,
+                             weight,
+                             height )) %>% pull(test)
+

@@ -1,0 +1,8 @@
+library(dplyr)
+data <- read.csv("../01_plis_relaps/data/data_full_with_fat.csv")
+
+
+test <- data %>% mutate(test = calculate_FLI( triglycerides,
+                          bmi, ggt, waist)) %>% pull(test)
+
+test_df = cbind(test, data$FLI)

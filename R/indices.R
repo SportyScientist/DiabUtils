@@ -1,0 +1,107 @@
+#' HOMA IR Calculation
+#'
+#' Calculates the HOMA-IR
+#' @param insulin_000 The fasting insulin value in pmol/l
+#' @param glucose_000 The fasting glucose value in mmol/l
+#' @return HOMAR-IR
+#' @examples 
+#' HOMAIR <- HOMAIR(40, 80);
+#' data <- data %>% mutate(HOMAIR = calculate_HOMAIR(40,80))
+#' @export
+calculate_HOMAIR <- function(insulin_000, glucose_000) {
+  return((insulin_000 / 7) * (glucose_000 / 22.5))
+}
+
+
+#' HOMA-B Calculation
+#'
+#' Calculates the HOMA-B
+#' @param INS00 The fasting insulin value in pmol/l
+#' @param GLU00 The fasting glucose value in mmol/l
+#' @return HOMAR-IR
+#' @examples 
+#' HOMAB <- HOMAB(40, 80);
+#' data <- data %>% mutate(HOMAB = calculate_HOMAB(40,80))
+#' @export
+calculate_HOMAB <- function(insulin_000, glucose_000) {
+  return(20 * (insulin_000 / 7) / (glucose_000 - 3.5))
+}
+
+
+
+#' OGIS Calculation
+#'
+#' Calculates the OGIS Index for a 5 point OGTT
+#' @param glucose_000 The fasting glucose value in mmol/l
+#' @param glucose_090 The 90min glucose value in mmol/l
+#' @param glucose_120 The 120min glucose value in mmol/l
+#' @param insulin_000 The fasting insulin value in pmol/l
+#' @param insulin_090 The 90min insulin value in pmol/l
+#' @param weight Weight in kg
+#' @param height Height in cm
+#' @param dose Amount of glucose in OGTT in g, defaults to 75
+#' @return OGIS
+#' @examples 
+#' data <- data %>% mutate(OGIS = calculate_OGIS(80, 140, 120, 40, 80, 75, 170))
+#' @export
+calculate_OGIS <- function(glucose_000, glucose_090, glucose_120, insulin_000, insulin_090, weight, height, dose = 75) {
+
+  # Calculate Body Surface Area (BSA)
+  BSA <- 0.1640443958298 * weight^0.515 * (0.01 * height)^0.422
+  
+  # Normalize dose
+  NDose <- 5.551 * dose / BSA
+  
+  # Calculate intermediate variables
+  X1 <- 792 * ((6.5 * NDose - 10000 * (glucose_120 - glucose_090) / 30) / glucose_090 + 4514 / glucose_000) / (insulin_090 - insulin_000 + 1951)
+  X2 <- (0.0118 * (glucose_090 - 4.9959) + 1) * X1
+  
+  # Calculate OGIS
+  OGIS <- (X2 + sqrt(X2^2 + 4 * 0.0118 * 173 * (glucose_090 - 4.9959) * X1)) / 2
+  
+  return(OGIS)
+}
+
+
+
+#' Matsuda Calculation
+#'
+#' Calculates the Matsuda Index for a 5 point OGTT
+#' @param glucose_000 The fasting glucose value in mmol/l
+#' @param glucose_030 The fasting glucose value in mmol/l
+#' @param glucose_060 The fasting glucose value in mmol/l
+#' @param glucose_090 The 90min glucose value in mmol/l
+#' @param glucose_120 The 120min glucose value in mmol/l
+#' @param insulin_000 The fasting insulin value in pmol/l
+#' @param insulin_030 The fasting insulin value in pmol/l
+#' @param insulin_060 The fasting insulin value in pmol/l
+#' @param insulin_090 The fasting insulin value in pmol/l
+#' @param insulin_120 The 90min insulin value in pmol/l
+#' @return Matsuda
+#' @examples 
+#' data <- data %>% mutate(Matsuda = Matsuda()
+#' @export
+calculate_matsuda <- function(data) {
+return (10000 / sqrt(
+  (glucose_000 * 18 * insulin_000 / 6) *
+    ((glucose_000 + glucose_030 * 2 + glucose_060 * 2 + glucose_090 * 2 + glucose_120) / 8 * 18) *
+    ((insulin_000 + insulin_030 * 2 + insulin_060 * 2 + insulin_090 * 2 + insulin_120) / 8 / 6)
+))
+}
+
+#' FLI Calculation
+#' 
+#' Calculates the fatty liver index (FLI)
+#' @param triglycerides Triglycerides in mg/dl
+#' @param bmi BMI
+#' @param ggt GGT levels in IU/L
+#' @garam waist Waist in cm 
+#' @export
+calculate_FLI <- function(triglycerides, bmi, ggt, waist) {
+
+        numerator <- exp((0.953 * log(triglycerides)) + (0.139 * bmi) + (0.718 * log(ggt)) + (0.053 * waist) - 15.745)
+        denominator <- 1 + numerator
+        
+        (numerator / denominator) * 100
+}
+
