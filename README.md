@@ -11,3 +11,11 @@ library(devtools)
 # Install DiabUtils from GitHub
 install_github("SportyScientist/DiabUtils")
 ```
+## Functions
+All functions are designed to work with dplyr / the tidyverse.
+### Index Calculations
+- calculate_OGIS()
+- calculate_HOMAIR()
+- calculate_HOMAB()
+- calculate_matsuda()
+- calculate_FLI()
