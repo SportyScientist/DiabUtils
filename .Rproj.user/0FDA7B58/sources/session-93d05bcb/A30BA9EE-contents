@@ -1,8 +1,15 @@
 library(dplyr)
 data <- read.csv("../01_plis_relaps/data/data_full_with_fat.csv")
 
+data$event <- ifelse(data$glucose_mgdl_000 >= 126 | data$hba1c_perc >= 6.5 | data$glucose_mgdl_120 >= 200, 1, 0)
 
 test <- data %>% mutate(test = calculate_FLI( triglycerides,
                           bmi, ggt, waist)) %>% pull(test)
 
 test_df = cbind(test, data$FLI)
+library(table1)
+
+table1(~ factor(sex) + age, data=data,  render.continuous=my.render.cont)
+
+
+

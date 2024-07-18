@@ -6,6 +6,15 @@
 \usage{
 calculate_FLI(triglycerides, bmi, ggt, waist)
 }
+\arguments{
+\item{triglycerides}{Triglycerides in mg/dl}
+
+\item{bmi}{BMI}
+
+\item{ggt}{GGT levels in IU/L}
+
+\item{waist}{Waist in cm}
+}
 \description{
 Calculates the fatty liver index (FLI)
 }

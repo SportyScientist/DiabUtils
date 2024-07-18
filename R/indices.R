@@ -95,7 +95,7 @@ return (10000 / sqrt(
 #' @param triglycerides Triglycerides in mg/dl
 #' @param bmi BMI
 #' @param ggt GGT levels in IU/L
-#' @garam waist Waist in cm 
+#' @param waist Waist in cm 
 #' @export
 calculate_FLI <- function(triglycerides, bmi, ggt, waist) {
 
@@ -105,3 +105,16 @@ calculate_FLI <- function(triglycerides, bmi, ggt, waist) {
         (numerator / denominator) * 100
 }
 
+#' Area under the curve (AUC) Calculation
+#' 
+#' Calculates the AUC between two timepoints using the trapezoid method
+#' @param TP1 Value at the first timepoint 
+#' @param TP2 Value at the second timepoint
+#' @param Time Time interval in minutes
+#' @examples 
+#' data <- data %>% mutate(auc = calculate_auc(glucose_000, glucose_120, 120)
+#' @export
+calculate_auc <- function(TP1, TP2, Time) {
+  auc <- (TP1 + TP2) * Time / 2
+  return(auc)
+}
