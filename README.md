@@ -19,3 +19,16 @@ All functions are designed to work with dplyr / the tidyverse.
 - calculate_HOMAB()
 - calculate_matsuda()
 - calculate_FLI()
+- calculate_auc
+
+### Classifications
+- calculate_glycat()
+
+### Data Preparation
+- prep_data_km(): Preps data for input into ggsurvival package
+
+### Table1 
+Used in conjunction with the Table1 package (https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html)
+- my.render.cont()
+- my.render.cat()
+- pvalue()
