@@ -5,7 +5,6 @@
 \title{Matsuda Calculation}
 \usage{
 calculate_matsuda(
-  data,
   glucose_000,
   glucose_030,
   glucose_060,
