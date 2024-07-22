@@ -4,7 +4,19 @@
 \alias{calculate_matsuda}
 \title{Matsuda Calculation}
 \usage{
-calculate_matsuda(data)
+calculate_matsuda(
+  data,
+  glucose_000,
+  glucose_030,
+  glucose_060,
+  glucose_090,
+  glucose_120,
+  insulin_000,
+  insulin_030,
+  insulin_060,
+  insulin_090,
+  insulin_120
+)
 }
 \arguments{
 \item{glucose_000}{The fasting glucose value in mmol/l}

@@ -81,7 +81,8 @@ calculate_OGIS <- function(glucose_000, glucose_090, glucose_120, insulin_000, i
 #' @examples 
 #' data <- data %>% mutate(Matsuda = Matsuda()
 #' @export
-calculate_matsuda <- function(data) {
+calculate_matsuda <- function(data, glucose_000, glucose_030, glucose_060, glucose_090, glucose_120, 
+                              insulin_000, insulin_030, insulin_060, insulin_090, insulin_120) {
 return (10000 / sqrt(
   (glucose_000 * 18 * insulin_000 / 6) *
     ((glucose_000 + glucose_030 * 2 + glucose_060 * 2 + glucose_090 * 2 + glucose_120) / 8 * 18) *

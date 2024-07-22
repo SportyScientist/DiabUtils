@@ -1,6 +1,0 @@
-Package: DiabUtils
-Type: Package
-Title: Helper Functions for Medical Data Analysis at IDM
-Encoding: UTF-8
-Version: 0.0.1.0
-RoxygenNote: 7.3.1
