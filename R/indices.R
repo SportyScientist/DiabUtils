@@ -119,3 +119,42 @@ calculate_auc <- function(TP1, TP2, Time) {
   auc <- (TP1 + TP2) * Time / 2
   return(auc)
 }
+
+
+
+#' Calculate eGFR
+#' 
+#' Calculates the AUC between two timepoints using the trapezoid method
+#' @param creatinine Creatinine in mg/dl
+#' @param age Age in year
+#' @param sex Sex
+#' @param female string of which value in sex equals female. Defaults to "female"
+#' @export
+calculate_egfr <- function(creatinine, age, sex) {
+  # Ensure that `sex` is a factor with levels "female" and "male"
+  sex <- factor(sex, levels = c("female", "male"))
+  
+  # Initialize the factor vector
+  factor <- numeric(length(creatinine))
+  
+  # Calculate the factor based on sex and creatinine
+  factor[sex == "female"] <- ifelse(creatinine[sex == "female"] <= 0.7,
+                                    144 * (creatinine[sex == "female"] / 0.7) ** (-0.329),
+                                    144 * (creatinine[sex == "female"] / 0.7) ** (-1.209))
+  
+  factor[sex == "male"] <- ifelse(creatinine[sex == "male"] <= 0.9,
+                                  141 * (creatinine[sex == "male"] / 0.9) ** (-0.411),
+                                  141 * (creatinine[sex == "male"] / 0.9) ** (-1.209))
+  
+  # Calculate the age factor
+  age_factor <- 0.993 ** age
+  
+  # Calculate eGFR
+  egfr <- factor * age_factor
+  
+  return(egfr)
+}
+
+
+
+
