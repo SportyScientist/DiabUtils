@@ -39,5 +39,5 @@ OGIS
 Calculates the OGIS Index for a 5 point OGTT
 }
 \examples{
-data <- data \%>\% mutate(OGIS = calculate_OGIS(80, 140, 120, 40, 80, 75, 170))
+data <- data \%>\% mutate(OGIS = calculate_OGIS(glucose_000, glucose_090, glucose_120, insulin_000, insulin_090, weight, height))
 }

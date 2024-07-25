@@ -7,9 +7,9 @@
 calculate_HOMAB(insulin_000, glucose_000)
 }
 \arguments{
-\item{INS00}{The fasting insulin value in pmol/l}
+\item{insulin_000}{The fasting insulin value in pmol/l}
 
-\item{GLU00}{The fasting glucose value in mmol/l}
+\item{glucose_000}{The fasting glucose value in mmol/l}
 }
 \value{
 HOMAR-IR
@@ -19,5 +19,5 @@ Calculates the HOMA-B
 }
 \examples{
 HOMAB <- HOMAB(40, 80);
-data <- data \%>\% mutate(HOMAB = calculate_HOMAB(40,80))
+data <- data \%>\% mutate(HOMAB = calculate_HOMAB(insulin_000, glucose_000))
 }

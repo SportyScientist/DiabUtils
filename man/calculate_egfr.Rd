@@ -4,10 +4,10 @@
 \alias{calculate_egfr}
 \title{Calculate eGFR}
 \usage{
-calculate_egfr(creatinine, age, sex)
+calculate_egfr(creatinine, age, sex, female = "female")
 }
 \arguments{
-\item{creatinine}{Creatinine in mg/dl}
+\item{creatinine}{Serum creatinine in mg/dl}
 
 \item{age}{Age in year}
 
@@ -17,4 +17,7 @@ calculate_egfr(creatinine, age, sex)
 }
 \description{
 Calculates the AUC between two timepoints using the trapezoid method
+}
+\examples{
+data <- data \%>\% mutate(egfr = calculate_egfr(creatinine, age, sex))
 }

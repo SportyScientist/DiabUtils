@@ -15,6 +15,13 @@ calculate_FLI(triglycerides, bmi, ggt, waist)
 
 \item{waist}{Waist in cm}
 }
+\value{
+FLI
+}
 \description{
 Calculates the fatty liver index (FLI)
+}
+\examples{
+FLI <- calcualte_FLI(110, 35, 27, 85)
+data <- data \%>\% mutate(calculate_FLI, triglycerides, bmi, ggt, waist)
 }

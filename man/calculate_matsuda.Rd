@@ -45,5 +45,5 @@ Matsuda
 Calculates the Matsuda Index for a 5 point OGTT
 }
 \examples{
-data <- data \%>\% mutate(Matsuda = Matsuda()
+data <- data \%>\% mutate(Matsuda = calculate_matsuda(glucose_000, glucose_030, glucose_060, glucose_090, glucose_120, insulin_000, insulin_030, insulin_060, insulin_090, insulin_120))
 }

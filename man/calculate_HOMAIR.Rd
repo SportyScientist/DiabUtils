@@ -19,5 +19,5 @@ Calculates the HOMA-IR
 }
 \examples{
 HOMAIR <- HOMAIR(40, 80);
-data <- data \%>\% mutate(HOMAIR = calculate_HOMAIR(40,80))
+data <- data \%>\% mutate(HOMAIR = calculate_HOMAIR(insulin_000,glucose_000))
 }
