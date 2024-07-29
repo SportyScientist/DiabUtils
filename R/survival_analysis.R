@@ -9,32 +9,23 @@
 #' @examples 
 #' test_km <- prep_data_km(data, id = "patno", date = "datum")
 #' @export
-prep_data_km <- function(data, date = "date", id = "id", event = "event"){
-  
+prep_data_km<-function (data, date = "date", id = "id", event = "event") {
   if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop("The dplyr package is required but is not installed. Please install it first.")
   }
-  
-  if (!all(data[, event] %in% c(0, 1, NA)) && !all(data[, event] %in% c(TRUE, FALSE, NA))) {
+  if (!all(data[, event] %in% c(0, 1, NA)) && !all(data[, event] %in% 
+                                                   c(TRUE, FALSE, NA))) {
     stop("The 'event' variable must be binary (either 0/1 or TRUE/FALSE).")
   }
-  
-  # Convert date to Date class
   data[[date]] <- as.Date(data[[date]])
-    # Calculate the time from the first date to each of the other dates
-  data_new <- data %>%
-    filter(!is.na(!!as.name(event))) %>% 
-    arrange(!!as.name(id), !!as.name(date)) %>%
-    group_by(!!as.name(id)) %>%
-    mutate(time_from_first = (!!as.name(date) - first(!!as.name(date))) / 365.25) %>%
+  data_new <- data %>% dplyr::filter(!is.na(!!as.name(event))) %>% 
+    dplyr::arrange(!!as.name(id), !!as.name(date)) %>% dplyr::group_by(!!as.name(id)) %>% 
+    dplyr::mutate(time_from_first = (!!as.name(date) - first(!!as.name(date)))/365.25) %>% 
     ungroup()
-  
-  # Keep only the first row where event is TRUE for each patient, or the last row if event is never TRUE
-  data_new_2 <- data_new %>%
-    arrange(!!as.name(id), !!as.name(date)) %>%
-    group_by(!!as.name(id)) %>%
-    slice(if (any(!!as.name(event) == TRUE )) which.max(!!as.name(event)) else n()) %>%
-    ungroup()
-  
- return(data_new_2)
+  data_new_2 <- data_new %>% dplyr::arrange(!!as.name(id), !!as.name(date)) %>% 
+    dplyr::group_by(!!as.name(id)) %>% dplyr::slice(if (any(!!as.name(event) == 
+                                                            TRUE)) 
+      which.max(!!as.name(event))
+      else n()) %>% ungroup()
+  return(data_new_2)
 }
