@@ -1,5 +1,7 @@
 # DiabUtils
 
+![logo of DiabUtils package](logo/imgfile.png)
+
 DiabUtils is a utility package for diabetes data analysis. It includes functions for index calculation and visualization of (diabetes-related) datasets.
 
 ## Installation
