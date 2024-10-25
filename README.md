@@ -1,4 +1,4 @@
-# <img src="logo/imgfile.png" alt="Logo for DiabUtils Package displaying sugarcubes" height="100" style="vertical-align: middle;">  DiabUtils
+# <span style="display: inline-flex; align-items: center;"><img src="logo/imgfile.png" alt="Logo for DiabUtils Package displaying sugarcubes" height="100"> DiabUtils</span>
 
 DiabUtils is a utility package for diabetes data analysis. It includes functions for index calculation and visualization of (diabetes-related) datasets.
 
