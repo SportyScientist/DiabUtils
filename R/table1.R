@@ -93,3 +93,38 @@ pvalue <- function(x, ...) {
   c("", p_formatted)
 
 }
+
+#' Remove Outliers
+#'
+#' @param data A numeric vector or column of a data frame to process.
+#' @param method A character string specifying the method to detect outliers. Options are `"iqr"` (interquartile range) or `"zscore"`.
+#' @param threshold A numeric threshold for the `zscore` method (default is 3) or IQR multiplier (default is 1.5 for `"iqr"`).
+#' 
+#' @return A numeric vector with outliers removed.
+#' @examples
+#' # Remove outliers using IQR method
+#' remove_outliers(c(1, 2, 3, 100), method = "iqr")
+#'
+#' # Remove outliers using z-score method
+#' remove_outliers(c(1, 2, 3, 100), method = "zscore", threshold = 2)
+#'
+#' @export
+remove_outliers <- function(data, method = "iqr", threshold = 1.5) {
+  if (!is.numeric(data)) stop("Data must be numeric.")
+  
+  if (method == "iqr") {
+    Q1 <- quantile(data, 0.25, na.rm = TRUE)
+    Q3 <- quantile(data, 0.75, na.rm = TRUE)
+    IQR <- Q3 - Q1
+    lower_bound <- Q1 - threshold * IQR
+    upper_bound <- Q3 + threshold * IQR
+    data <- data[data >= lower_bound & data <= upper_bound]
+  } else if (method == "zscore") {
+    z_scores <- scale(data)
+    data <- data[abs(z_scores) <= threshold]
+  } else {
+    stop("Invalid method. Choose 'iqr' or 'zscore'.")
+  }
+  
+  return(data)
+}

@@ -27,6 +27,7 @@ All functions are designed to work with dplyr / the tidyverse.
 - classify_glycemia(): Classifies into NGT, Prediabetes and Diabetes. Takes ADA and WHO as an argument (WHO doesn't use Hba1c for their classification). Returns either only PRE or detailed classification into iIGT, iIFG and IFG+IGT. 
 
 ### Data Preparation
+- remove_outliers(): remove outliers either by IQR or Z-score 
 - prep_data_km(): Preps data for input into ggsurvival package
 
 ### Table1 
