@@ -14,36 +14,44 @@ calculate_matsuda(
   insulin_030,
   insulin_060,
   insulin_090,
-  insulin_120
+  insulin_120,
+  unit_insulin = "SI",
+  unit_glucose = "conventional"
 )
 }
 \arguments{
-\item{glucose_000}{The fasting glucose value in mmol/l}
+\item{glucose_000}{The fasting glucose value.}
 
-\item{glucose_030}{The fasting glucose value in mmol/l}
+\item{glucose_030}{The 30 min glucose value.}
 
-\item{glucose_060}{The fasting glucose value in mmol/l}
+\item{glucose_060}{The 60 min glucose value.}
 
-\item{glucose_090}{The 90min glucose value in mmol/l}
+\item{glucose_090}{The 90 min glucose value.}
 
-\item{glucose_120}{The 120min glucose value in mmol/l}
+\item{glucose_120}{The 120 min glucose value.}
 
-\item{insulin_000}{The fasting insulin value in pmol/l}
+\item{insulin_000}{The fasting insulin value.}
 
-\item{insulin_030}{The fasting insulin value in pmol/l}
+\item{insulin_030}{The 30 min insulin value.}
 
-\item{insulin_060}{The fasting insulin value in pmol/l}
+\item{insulin_060}{The 60 min insulin value.}
 
-\item{insulin_090}{The fasting insulin value in pmol/l}
+\item{insulin_090}{The 90 min insulin value.}
 
-\item{insulin_120}{The 90min insulin value in pmol/l}
+\item{insulin_120}{The 120 min insulin value.}
+
+\item{unit_insulin}{Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. Defaults to "SI".}
+
+\item{unit_glucose}{Character string specifying the unit for glucose. Use "SI" for mmol/l or "conventional" for mg/dl. Defaults to "conventional".}
 }
 \value{
-Matsuda
+Matsuda Index
 }
 \description{
-Calculates the Matsuda Index for a 5 point OGTT
+Calculates the Matsuda Index for a 120 min 5-point OGTT (Oral Glucose Tolerance Test).
 }
 \examples{
-data <- data \%>\% mutate(Matsuda = calculate_matsuda(glucose_000, glucose_030, glucose_060, glucose_090, glucose_120, insulin_000, insulin_030, insulin_060, insulin_090, insulin_120))
+data <- data \%>\% mutate(Matsuda = calculate_matsuda(glucose_000, glucose_030, glucose_060, glucose_090, glucose_120, 
+                                                     insulin_000, insulin_030, insulin_060, insulin_090, insulin_120, 
+                                                     unit_insulin = "SI", unit_glucose = "conventional"))
 }

@@ -4,24 +4,35 @@
 \alias{calculate_FLI}
 \title{FLI Calculation}
 \usage{
-calculate_FLI(triglycerides, bmi, ggt, waist)
+calculate_FLI(
+  triglycerides,
+  bmi,
+  ggt,
+  waist,
+  unit_triglycerides = "conventional",
+  unit_ggt = "conventional"
+)
 }
 \arguments{
-\item{triglycerides}{Triglycerides in mg/dl}
+\item{triglycerides}{Triglycerides level.}
 
-\item{bmi}{BMI}
+\item{bmi}{Body Mass Index (BMI).}
 
-\item{ggt}{GGT levels in IU/L}
+\item{ggt}{Gamma-glutamyl transferase (GGT) level.}
 
-\item{waist}{Waist in cm}
+\item{waist}{Waist circumference in cm.}
+
+\item{unit_triglycerides}{Triglycerides unit. Use "conventional" for mg/dl or "SI" for mmol/l. Defaults to "conventional".}
+
+\item{unit_ggt}{GT unit. Use "conventional" for IU/L or "SI" for µkat/L. Defaults to "conventional".}
 }
 \value{
-FLI
+Fatty Liver Index (FLI)
 }
 \description{
 Calculates the fatty liver index (FLI)
 }
 \examples{
-FLI <- calcualte_FLI(110, 35, 27, 85)
-data <- data \%>\% mutate(calculate_FLI, triglycerides, bmi, ggt, waist)
+FLI <- calculate_FLI(100, 24.2, 16, 70, unit_triglycerides = "conventional", unit_ggt = "conventional")
+data <- data \%>\% mutate(FLI = calculate_FLI(triglycerides, bmi, ggt, waist, unit_triglycerides = "SI", unit_ggt = "conventional"))
 }

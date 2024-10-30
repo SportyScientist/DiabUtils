@@ -19,10 +19,11 @@ All functions are designed to work with dplyr / the tidyverse.
 - calculate_HOMAB()
 - calculate_matsuda()
 - calculate_FLI()
-- calculate_auc
+- calculate_auc()
+- calculate_FIB4()
 
 ### Classifications
-- calculate_glycat()
+- classify_glycemia(): Classifies into NGT, Prediabetes and Diabetes. Takes ADA and WHO as an argument (WHO doesn't use Hba1c for their classification). Returns either only PRE or detailed classification into iIGT, iIFG and IFG+IGT. 
 
 ### Data Preparation
 - prep_data_km(): Preps data for input into ggsurvival package

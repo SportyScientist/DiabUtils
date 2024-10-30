@@ -2,22 +2,32 @@
 % Please edit documentation in R/indices.R
 \name{calculate_HOMAIR}
 \alias{calculate_HOMAIR}
-\title{HOMA IR Calculation}
+\title{HOMA-IR Calculation}
 \usage{
-calculate_HOMAIR(insulin_000, glucose_000)
+calculate_HOMAIR(
+  insulin_000,
+  glucose_000,
+  unit_insulin = "SI",
+  unit_glucose = "conventional"
+)
 }
 \arguments{
-\item{insulin_000}{The fasting insulin value in pmol/l}
+\item{insulin_000}{The fasting insulin value.}
 
-\item{glucose_000}{The fasting glucose value in mmol/l}
+\item{glucose_000}{The fasting glucose value.}
+
+\item{unit_insulin}{Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. If conventional is specified, it assumes a conversion factor of 7. Defaults to "SI".}
+
+\item{unit_glucose}{Character string specifying the unit for glucose. Use "SI" for mmol/l or "conventional" for mg/dl. Defaults to "conventional"}
 }
 \value{
-HOMAR-IR
+HOMA-IR
 }
 \description{
-Calculates the HOMA-IR
+Calculates the HOMA-IR (Homeostatic Model Assessment of Insulin Resistance) based on fasting insulin and glucose values.
 }
 \examples{
-HOMAIR <- HOMAIR(40, 80);
-data <- data \%>\% mutate(HOMAIR = calculate_HOMAIR(insulin_000,glucose_000))
+# Example usage
+HOMAIR <- calculate_HOMAIR(60, 100, unit_insulin = "SI", unit_glucose = "conventional")
+data <- data \%>\% mutate(HOMAIR = calculate_HOMAIR(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "SI"))
 }
