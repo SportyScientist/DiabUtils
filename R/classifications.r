@@ -42,7 +42,7 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
   if (system == "ADA" && is.null(hba1c)) {
     stop("Error: 'hba1c' values are required when 'system' is set to 'ADA'.")
   }
-  if (!is.null(hba1c) && any(!sapply(hba1c, is.numeric) | hba1c <= 0, na.rm = TRUE)) {
+  if (any(sapply(hba1c, validate_value))) {
     stop("Error: 'hba1c' must be a positive numeric vector or NULL.")
   }
   if (!is.logical(details)) {
