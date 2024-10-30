@@ -8,6 +8,7 @@ DiabUtils is a utility package for diabetes data analysis. It includes functions
 # Make sure that the devtools library is loaded
 library(devtools)
 
+
 # Install DiabUtils from GitHub
 install_github("SportyScientist/DiabUtils")
 ```
@@ -30,6 +31,6 @@ All functions are designed to work with dplyr / the tidyverse.
 
 ### Table1 
 Used in conjunction with the Table1 package (https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html)
-- my.render.cont()
-- my.render.cat()
+- render_cont()
+- render_cat()
 - pvalue()

@@ -2,18 +2,36 @@
 #'
 #'To be used in Table 1 package
 #' @export
-my.render.cont <- function(x) {
-  with(stats.apply.rounding(stats.default(x), digits=2), c("",
-                                                           "MEDIAN [IQR]" = sprintf("%s [%s-%s]", MEDIAN, Q1, Q3)#, 
-                                                           #"MEAN (SD)" = sprintf("%s ± (%s)", MEAN, SD)
-  ))
+render_cont <- function(x, summary_type = c("median", "mean", "both"), n_signif) {
+  summary_type <- match.arg(summary_type)
+  
+  # Calculate statistics without rounding yet
+  stats <- stats.default(x)
+  
+  # Define a custom rounding function with formatC to ensure trailing zeros
+  custom_round <- function(value) formatC(value, digits = n_signif, format = "f", flag = "0")
+  
+  # Apply custom rounding to each statistic
+  stats <- lapply(stats, custom_round)
+  
+  # Format output based on selected summary type
+  switch(summary_type,
+         "median" = c("",
+                      "MEDIAN [IQR]" = sprintf("%s [%s-%s]", stats$MEDIAN, stats$Q1, stats$Q3)),
+         "mean" = c("",
+                    "MEAN (SD)" = sprintf("%s ± (%s)", stats$MEAN, stats$SD)),
+         "both" = c("",
+                    "MEDIAN [IQR]" = sprintf("%s [%s-%s]", stats$MEDIAN, stats$Q1, stats$Q3),
+                    "MEAN (SD)" = sprintf("%s ± (%s)", stats$MEAN, stats$SD))
+  )
 }
- 
+
+
 #' Categorical Variable Rendering
 #'
 #'To be used in Table 1 package
 #' @export
-my.render.cat <- function(x) {
+render_cat <- function(x) {
 c("", sapply(stats.default(x), function(y) with(y,
                                                 sprintf("%d (%0.0f %%)", FREQ, PCT)
 )))
@@ -71,5 +89,7 @@ pvalue <- function(x, ...) {
     }
     
   }
-  c("", format.pval(p, digits=3, eps = 0.001))
+  p_formatted <- ifelse(p < 0.0001, "< 0.0001", formatC(p, format = "f", digits = 2))
+  c("", p_formatted)
+
 }

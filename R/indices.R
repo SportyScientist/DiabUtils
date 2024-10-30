@@ -322,3 +322,4 @@ calculate_fib4 <- function(age, ast, alt, platelets,
   
   return(fib4)
 }
+
