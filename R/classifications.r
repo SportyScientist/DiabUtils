@@ -21,6 +21,7 @@
 classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "ADA",
                               details = FALSE,
                               unit_glucose = "conventional", unit_hba1c = "perc") {
+  
   validate_value <- function(value) {
     if (is.na(value)) {
       return(FALSE)
@@ -29,20 +30,20 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
   }
 
   # Input checks
-  if (validate_value(glucose_000)) {
-    stop("Error: 'glucose_000' must be a positive numeric value.")
+  if (any(sapply(glucose_000, validate_value))) {
+    stop("Error: 'glucose_000' must be a positive numeric vector.")
   }
-  if (validate_value(glucose_120)) {
-    stop("Error: 'glucose_120' must be a positive numeric value.")
+  if (any(sapply(glucose_120, validate_value))) {
+    stop("Error: 'glucose_120' must be a positive numeric vector.")
   }
   if (!system %in% c("ADA", "WHO")) {
     stop("Error: 'system' must be either 'ADA' or 'WHO'.")
   }
   if (system == "ADA" && is.null(hba1c)) {
-    stop("Error: 'hba1c' value is required when 'system' is set to 'ADA'.")
+    stop("Error: 'hba1c' values are required when 'system' is set to 'ADA'.")
   }
-  if (!is.null(hba1c) && (!is.numeric(hba1c) || hba1c <= 0)) {
-    stop("Error: 'hba1c' must be a positive numeric value or NULL.")
+  if (!is.null(hba1c) && any(!sapply(hba1c, is.numeric) | hba1c <= 0, na.rm = TRUE)) {
+    stop("Error: 'hba1c' must be a positive numeric vector or NULL.")
   }
   if (!is.logical(details)) {
     stop("Error: 'details' must be a logical value (TRUE or FALSE).")
@@ -59,75 +60,75 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
     glucose_000 <- glucose_000 * 18.016
     glucose_120 <- glucose_120 * 18.016
   }
-
   if (unit_hba1c == "SI" && !is.null(hba1c)) {
     hba1c <- (hba1c * 0.0915) + 2.15
   }
 
-  # Initialize result
-  result <- "Unknown"
-
-  # ADA Classification
-  if (system == "ADA") {
-    if ((!is.na(hba1c) && hba1c >= 6.5) ||
-      (!is.na(glucose_000) && glucose_000 >= 126) ||
-      (!is.na(glucose_120) && glucose_120 >= 200)) {
-      result <- "DIA"
-    } else if (is.na(hba1c) || is.na(glucose_000) || is.na(glucose_120)) {
-      result <- NA
-    } else if ((glucose_000 >= 100 && glucose_000 < 126) ||
-      (glucose_120 >= 140 && glucose_120 < 200) ||
-      (hba1c >= 5.7 && hba1c < 6.5)) {
-      if (details) {
-        if (glucose_000 >= 100 && glucose_000 < 126 &&
-          glucose_120 < 140) {
-          result <- "iIFG"
-        } else if (glucose_120 >= 140 && glucose_120 < 200 &&
-          glucose_000 < 100) {
-          result <- "iIGT"
-        } else if (glucose_000 >= 100 && glucose_000 < 126 &&
-          glucose_120 >= 140 && glucose_120 < 200) {
-          result <- "IFG+IGT"
+  # Function to classify individual cases
+  classify_single <- function(glucose_000, glucose_120, hba1c) {
+    result <- "Unknown"
+    
+    # ADA Classification
+    if (system == "ADA") {
+      if ((!is.na(hba1c) && hba1c >= 6.5) ||
+          (!is.na(glucose_000) && glucose_000 >= 126) ||
+          (!is.na(glucose_120) && glucose_120 >= 200)) {
+        result <- "DIA"
+      } else if (is.na(hba1c) || is.na(glucose_000) || is.na(glucose_120)) {
+        result <- NA
+      } else if ((glucose_000 >= 100 && glucose_000 < 126) ||
+                 (glucose_120 >= 140 && glucose_120 < 200) ||
+                 (hba1c >= 5.7 && hba1c < 6.5)) {
+        if (details) {
+          if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 < 140) {
+            result <- "iIFG"
+          } else if (glucose_120 >= 140 && glucose_120 < 200 && glucose_000 < 100) {
+            result <- "iIGT"
+          } else if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
+            result <- "IFG+IGT"
+          } else {
+            result <- "PRE"
+          }
         } else {
           result <- "PRE"
         }
       } else {
-        result <- "PRE"
+        result <- "NGT"
       }
-    } else {
-      result <- "NGT"
     }
-  }
-
-  # WHO Classification
-  if (system == "WHO") {
-    if ((!is.na(glucose_000) && glucose_000 >= 126) ||
-      (!is.na(glucose_120) && glucose_120 >= 200)) {
-      result <- "DIA"
-    } else if (is.na(glucose_000) || is.na(glucose_120)) {
-      result <- NA
-    } else if ((glucose_000 >= 110 && glucose_000 < 126) ||
-      (glucose_120 >= 140 && glucose_120 < 200)) {
-      if (details) {
-        if (glucose_000 >= 110 && glucose_000 < 126 &&
-          glucose_120 < 140) {
-          result <- "iIFG"
-        } else if (glucose_120 >= 140 && glucose_120 < 200 &&
-          glucose_000 < 110) {
-          result <- "iIGT"
-        } else if (glucose_000 >= 110 && glucose_000 < 126 &&
-          glucose_120 >= 140 && glucose_120 < 200) {
-          result <- "IFG+IGT"
+    
+    # WHO Classification
+    if (system == "WHO") {
+      if ((!is.na(glucose_000) && glucose_000 >= 126) ||
+          (!is.na(glucose_120) && glucose_120 >= 200)) {
+        result <- "DIA"
+      } else if (is.na(glucose_000) || is.na(glucose_120)) {
+        result <- NA
+      } else if ((glucose_000 >= 110 && glucose_000 < 126) ||
+                 (glucose_120 >= 140 && glucose_120 < 200)) {
+        if (details) {
+          if (glucose_000 >= 110 && glucose_000 < 126 && glucose_120 < 140) {
+            result <- "iIFG"
+          } else if (glucose_120 >= 140 && glucose_120 < 200 && glucose_000 < 110) {
+            result <- "iIGT"
+          } else if (glucose_000 >= 110 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
+            result <- "IFG+IGT"
+          } else {
+            result <- "PRE"
+          }
         } else {
           result <- "PRE"
         }
       } else {
-        result <- "PRE"
+        result <- "NGT"
       }
-    } else {
-      result <- "NGT"
     }
+    
+    return(result)
   }
 
-  return(result)
+  # Vectorized application
+  results <- mapply(classify_single, glucose_000, glucose_120, hba1c, SIMPLIFY = TRUE)
+  return(results)
 }
+
