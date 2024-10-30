@@ -33,7 +33,7 @@ classify_glycemia(
 Glycemic Category
 }
 \description{
-As Defined by: 
+As Defined by:
 NGT: Fasting glucose < 100, 120min glucose < 140, hba1c < 5.7 (ADA)
 iIFG: Fasting glucose elevated
 iIGT: 120min glucose elevated
