@@ -13,7 +13,7 @@ prep_data_km<-function (data, date = "date", id = "id", event = "event") {
   if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop("The dplyr package is required but is not installed. Please install it first.")
   }
-  if (!all(data[, event] %in% c(0, 1, NA)) && !all(data[, event] %in% 
+  if (!all(data[[event]] %in% c(0, 1, NA)) && !all(data[[event]] %in% 
                                                    c(TRUE, FALSE, NA))) {
     stop("The 'event' variable must be binary (either 0/1 or TRUE/FALSE).")
   }
