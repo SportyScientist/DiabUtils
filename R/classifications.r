@@ -87,7 +87,7 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
           } else if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
             result <- "IFG+IGT"
           } else {
-            result <- "PRE"
+            result <- "HBA1C"
           }
         } else {
           result <- "PRE"
@@ -113,9 +113,9 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
             result <- "iIGT"
           } else if (glucose_000 >= 110 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
             result <- "IFG+IGT"
-          } else {
-            result <- "PRE"
-          }
+          } #else {
+            #result <- "PRE"
+         # }
         } else {
           result <- "PRE"
         }
@@ -132,3 +132,4 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
   return(results)
 }
 
+?mapply
