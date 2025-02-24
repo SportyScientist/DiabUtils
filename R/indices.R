@@ -50,7 +50,7 @@ calculate_HOMAIR(60, 100, unit_insulin = "SI", unit_glucose = "conventional")
 #' HOMAB <- calculate_HOMAB(80, 80, unit_insulin = "SI", unit_glucose = "conventional")
 #' data <- data %>% mutate(HOMAB = calculate_HOMAB(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "SI"))
 #' @export
-calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "conventional") {
+ <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "conventional") {
   
   # Input checks
   if (!unit_insulin %in% c("SI", "conventional")) {
@@ -69,11 +69,14 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
         insulin_000 <- insulin_000 / 6
     }
   
-  if(glucose_000 != 3.5){  return((20 * (insulin_000)) / (glucose_000 - 3.5))
-  
-} else(return(NA)) # return NA when division by 0
+if (is.na(glucose_000) | is.na(insulin_000)) {
+  return(NA)
+} else if (glucose_000 != 3.5) {
+  return((20 * insulin_000) / (glucose_000 - 3.5))
+} else {
+  return(NA)
+}# return NA when division by 0
 }
-
 
 #' OGIS Calculation
 #'
