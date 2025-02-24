@@ -109,6 +109,7 @@ pvalue <- function(x, ...) {
 #' remove_outliers(c(1, 2, 3, 100), method = "zscore", threshold = 2)
 #'
 #' @export
+#' 
 remove_outliers <- function(data, method = "iqr", threshold = 1.5) {
   if (!is.numeric(data)) stop("Data must be numeric.")
   
