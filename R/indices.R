@@ -50,31 +50,27 @@ calculate_HOMAIR <- function(insulin_000, glucose_000, unit_insulin = "SI", unit
 #' data <- data %>% mutate(HOMAB = calculate_HOMAB(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "SI"))
 #' @export
 calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_glucose = "conventional") {
-  
-  # Input checks
-  if (!unit_insulin %in% c("SI", "conventional")) {
-    stop("Invalid unit for insulin. Choose either 'SI' for pmol/l or 'conventional' for µU/ml.")
-  }
-  
-  if (!unit_glucose %in% c("SI", "conventional")) {
-    stop("Invalid unit for glucose. Choose either 'SI' for mmol/l or 'conventional' for mg/dl.")
-  }
-  
-  if (unit_glucose == "conventional") {
-    glucose_000 <- glucose_000 / 18.016  # Conversion from mg/dl to mmol/l
-  }
-
-   if (unit_insulin == "SI") {
+    if (!unit_insulin %in% c("SI", "conventional")) {
+        stop("Invalid unit for insulin. Choose either 'SI' for pmol/l or 'conventional' for µU/ml.")
+    }
+    if (!unit_glucose %in% c("SI", "conventional")) {
+        stop("Invalid unit for glucose. Choose either 'SI' for mmol/l or 'conventional' for mg/dl.")
+    }
+    if (unit_glucose == "conventional") {
+        glucose_000 <- glucose_000 / 18.016
+    }
+    if (unit_insulin == "SI") {
         insulin_000 <- insulin_000 / 6
     }
-  
-if (is.na(glucose_000) | is.na(insulin_000)) {
-  return(NA)
-} else if (glucose_000 != 3.5) {
-  return((20 * insulin_000) / (glucose_000 - 3.5))
-} else {
-  return(NA)
-}# return NA when division by 0
+    if (any(is.na(glucose_000)) | any(is.na(insulin_000))) {
+        return(NA)
+    }
+    else if (any(glucose_000 != 3.5)) {
+        return((20 * insulin_000) / (glucose_000 - 3.5))
+    }
+    else {
+        return(NA)
+    }
 }
 
 
