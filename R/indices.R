@@ -4,7 +4,7 @@
 #' 
 #' @param insulin_000 The fasting insulin value. 
 #' @param glucose_000 The fasting glucose value. 
-#' @param unit_insulin Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. If conventional is specified, it assumes a conversion factor of 7. Defaults to "SI".
+#' @param unit_insulin Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. If conventional is specified, it assumes a conversion factor of 6. Defaults to "SI".
 #' @param unit_glucose Character string specifying the unit for glucose. Use "SI" for mmol/l or "conventional" for mg/dl. Defaults to "conventional"
 #' @return HOMA-IR
 #' @examples 
@@ -26,11 +26,17 @@ calculate_HOMAIR <- function(insulin_000, glucose_000, unit_insulin = "SI", unit
   if (unit_glucose == "conventional") {
     glucose_000 <- glucose_000 / 18.016  # Conversion from mg/dl to mmol/l
   }
+   if (unit_insulin == "SI") {
+        insulin_000 <- insulin_000 / 6
+    }
   
-  # HOMA-IR calculation
-  return((insulin_000 / 7) * (glucose_000 / 22.5))
-}
+  
 
+
+  # HOMA-IR calculation
+  return((insulin_000 * glucose_000) / 22.5)
+}
+calculate_HOMAIR(60, 100, unit_insulin = "SI", unit_glucose = "conventional")
 
 #' HOMA-B Calculation
 #'
@@ -60,11 +66,14 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
   if (unit_glucose == "conventional") {
     glucose_000 <- glucose_000 / 18.016  # Conversion from mg/dl to mmol/l
   }
-  
-  # HOMA-B calculation
-  return(20 * (insulin_000 / 7) / (glucose_000 - 3.5))
-}
 
+   if (unit_insulin == "SI") {
+        insulin_000 <- insulin_000 / 6
+    }
+  
+  if(glucose_000 != 3.5){  return((20 * (insulin_000)) / (glucose_000 - 3.5))
+} else(return(NA)) # fix division by 0
+}
 
 
 #' OGIS Calculation
@@ -99,8 +108,8 @@ calculate_OGIS <- function(glucose_000, glucose_090, glucose_120, insulin_000, i
   
   # Convert insulin values if needed
   if (unit_insulin == "conventional") {
-    insulin_000 <- insulin_000 * 7  # µU/ml to pmol/l
-    insulin_090 <- insulin_090 * 7
+    insulin_000 <- insulin_000 * 6  # µU/ml to pmol/l
+    insulin_090 <- insulin_090 * 6
   }
   
   # Convert glucose values if needed

@@ -16,7 +16,7 @@ calculate_HOMAIR(
 
 \item{glucose_000}{The fasting glucose value.}
 
-\item{unit_insulin}{Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. If conventional is specified, it assumes a conversion factor of 7. Defaults to "SI".}
+\item{unit_insulin}{Character string specifying the unit for insulin. Use "SI" for pmol/l or "conventional" for µU/ml. If conventional is specified, it assumes a conversion factor of 6. Defaults to "SI".}
 
 \item{unit_glucose}{Character string specifying the unit for glucose. Use "SI" for mmol/l or "conventional" for mg/dl. Defaults to "conventional"}
 }
