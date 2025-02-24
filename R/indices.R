@@ -31,8 +31,6 @@ calculate_HOMAIR <- function(insulin_000, glucose_000, unit_insulin = "SI", unit
     }
   
   
-
-
   # HOMA-IR calculation
   return((insulin_000 * glucose_000) / 22.5)
 }
@@ -72,7 +70,8 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
     }
   
   if(glucose_000 != 3.5){  return((20 * (insulin_000)) / (glucose_000 - 3.5))
-} else(return(NA)) # fix division by 0
+  
+} else(return(NA)) # return NA when division by 0
 }
 
 
@@ -95,6 +94,7 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
 #' # Example usage
 #' data <- data %>% mutate(OGIS = calculate_OGIS(glucose_000, glucose_090, glucose_120, insulin_000, insulin_090, weight, height, unit_insulin = "SI", unit_glucose = "conventional"))
 #' @export
+#' 
 calculate_OGIS <- function(glucose_000, glucose_090, glucose_120, insulin_000, insulin_090, weight, height, dose = 75, unit_insulin = "SI", unit_glucose = "conventional") {
   
   # Input checks for units
