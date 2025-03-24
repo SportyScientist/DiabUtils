@@ -62,15 +62,23 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
     if (unit_insulin == "SI") {
         insulin_000 <- insulin_000 / 6
     }
-    if (any(is.na(glucose_000)) | any(is.na(insulin_000))) {
-        return(NA)
+    print(glucose_000)
+    
+    # Create result vector of same length as inputs
+    result <- numeric(length(glucose_000))
+    
+    # Handle each value individually
+    for (i in seq_along(glucose_000)) {
+        if (is.na(glucose_000[i]) || is.na(insulin_000[i])) {
+            result[i] <- NA
+        } else if (glucose_000[i] == 3.5) {
+            result[i] <- NA
+        } else {
+            result[i] <- (20 * insulin_000[i]) / (glucose_000[i] - 3.5)
+        }
     }
-    else if (any(glucose_000 != 3.5)) {
-        return((20 * insulin_000) / (glucose_000 - 3.5))
-    }
-    else {
-        return(NA)
-    }
+    
+    return(result)
 }
 
 
