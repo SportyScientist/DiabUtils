@@ -62,8 +62,7 @@ calculate_HOMAB <- function(insulin_000, glucose_000, unit_insulin = "SI", unit_
     if (unit_insulin == "SI") {
         insulin_000 <- insulin_000 / 6
     }
-    print(glucose_000)
-    
+        
     # Create result vector of same length as inputs
     result <- numeric(length(glucose_000))
     
