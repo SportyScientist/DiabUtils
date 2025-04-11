@@ -30,16 +30,37 @@ classify_glycemia(
 \item{unit_hba1c}{Unit of the hba1c values, can be SI (mmol/mol) or perc (%). Defaults to perc.}
 }
 \value{
-Glycemic Category
+A character vector containing the glycemic category for each input value. Possible values are:
+\itemize{
+  \item NGT: Normal glucose tolerance
+  \item iIFG: Isolated impaired fasting glucose
+  \item iIGT: Isolated impaired glucose tolerance
+  \item IFG+IGT: Combined impaired fasting glucose and impaired glucose tolerance
+  \item HBA1C: Prediabetes based on HbA1c
+  \item PRE: Prediabetes (when details = FALSE)
+  \item DIA: Diabetes
+}
 }
 \description{
-As Defined by:
-NGT: Fasting glucose < 100, 120min glucose < 140, hba1c < 5.7 (ADA)
-iIFG: Fasting glucose elevated
-iIGT: 120min glucose elevated
-IFG+IGT: Fasting and 120min glucose elevated
-DIA: Fasting glucose above 126 OR 120min glucose above 200 OR HBA1C above 6.5
+Classifies glycemic status based on fasting glucose, 120-minute glucose, and HbA1c values according to either ADA or WHO criteria.
+}
+\details{
+The classification is based on the following criteria:
+\itemize{
+  \item NGT: Fasting glucose < 100, 120min glucose < 140, hba1c < 5.7 (ADA)
+  \item iIFG: Fasting glucose elevated
+  \item iIGT: 120min glucose elevated
+  \item IFG+IGT: Fasting and 120min glucose elevated
+  \item DIA: Fasting glucose above 126 OR 120min glucose above 200 OR HBA1C above 6.5
+}
 }
 \examples{
+# ADA classification
 classify_glycemia(90, 160, 6.9, system = "ADA", details = TRUE)
+
+# WHO classification
+classify_glycemia(100, 150, system = "WHO", details = TRUE)
+
+# Vectorized input
+classify_glycemia(c(90, 110), c(130, 150), c(5.5, 5.5), system = "ADA")
 }

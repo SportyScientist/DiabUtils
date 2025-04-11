@@ -4,3 +4,5 @@ Title: Helper Functions for Medical Data Analysis at IDM
 Encoding: UTF-8
 Version: 0.0.2.0
 RoxygenNote: 7.3.2
+Suggests: testthat (>= 3.0.0)
+Config/testthat/edition: 3

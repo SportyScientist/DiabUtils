@@ -113,9 +113,7 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
             result <- "iIGT"
           } else if (glucose_000 >= 110 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
             result <- "IFG+IGT"
-          } #else {
-            #result <- "PRE"
-         # }
+          }
         } else {
           result <- "PRE"
         }
@@ -127,9 +125,22 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
     return(result)
   }
 
-  # Vectorized application
-  results <- mapply(classify_single, glucose_000, glucose_120, hba1c, SIMPLIFY = TRUE)
+  # Handle both single values and vectors
+  # If any input is a vector of length > 1, use mapply for vectorized operation
+  if (length(glucose_000) > 1 || length(glucose_120) > 1 || (!is.null(hba1c) && length(hba1c) > 1)) {
+    # For WHO classification where hba1c might be NULL
+    if (is.null(hba1c)) {
+      # Create a dummy hba1c vector of NAs with the same length as the longest input
+      max_length <- max(length(glucose_000), length(glucose_120))
+      dummy_hba1c <- rep(NA, max_length)
+      results <- mapply(classify_single, glucose_000, glucose_120, dummy_hba1c, SIMPLIFY = TRUE)
+    } else {
+      results <- mapply(classify_single, glucose_000, glucose_120, hba1c, SIMPLIFY = TRUE)
+    }
+  } else {
+    # For single values, just call the function directly
+    results <- classify_single(glucose_000, glucose_120, hba1c)
+  }
+  
   return(results)
 }
-
-?mapply
