@@ -9,7 +9,9 @@
 #' @param glucose_000 The fasting glucose value
 #' @param glucose_120 The 120min glucose value
 #' @param hba1c HbA1c value. Not required when system = WHO.
-#' @param system ADA or WHO. Defaults to ADA
+#' @param use_hba1c_pre Logical (TRUE/FALSE). Only relevant when system = ADA. Whether to use HbA1c for classification of prediabetes. Defaults to TRUE.
+#' @param use_hba1c_dia Logical (TRUE/FALSE). Only relevant when system = WHO Whether to use HbA1c for classification of diabetes. Defaults to FALSE.
+#' @param system ADA or WHO. Defaults to ADA. IMPORTANT: Fasting glucose threshold for prediabetes is 100 mg/dL for ADA and 110 mg/dL for WHO! 
 #' @param details Logical (TRUE/FALSE). Wether the function should return a detailed differentiation of prediabetes or just "PRE". Defaults to FALSE
 #' @param unit_glucose Unit of the glucose values, can be SI (mmol/l) or conventional (mg/dl). Defaults to conventional.
 #' @param unit_hba1c Unit of the hba1c values, can be SI (mmol/mol) or perc (%). Defaults to perc.
@@ -18,7 +20,7 @@
 #' @examples
 #' classify_glycemia(90, 160, 6.9, system = "ADA", details = TRUE)
 #' @export
-classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "ADA",
+classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, use_hba1c_pre = TRUE, use_hba1c_dia = FALSE, system = "ADA",
                               details = FALSE,
                               unit_glucose = "conventional", unit_hba1c = "perc") {
   
@@ -54,6 +56,13 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
   if (!unit_hba1c %in% c("perc", "SI")) {
     stop("Error: 'unit_hba1c' must be either 'perc' or 'SI'.")
   }
+  
+  if (!is.logical(use_hba1c_pre)) {
+    stop("Error: 'use_hba1c_pre' must be a logical value (TRUE or FALSE).")
+  }
+  if (!is.logical(use_hba1c_dia)) {
+    stop("Error: 'use_hba1c_dia' must be a logical value (TRUE or FALSE).")
+  }
 
   # Convert units if necessary
   if (unit_glucose == "SI") {
@@ -70,37 +79,59 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
     
     # ADA Classification
     if (system == "ADA") {
+
       if ((!is.na(hba1c) && hba1c >= 6.5) ||
           (!is.na(glucose_000) && glucose_000 >= 126) ||
           (!is.na(glucose_120) && glucose_120 >= 200)) {
         result <- "DIA"
-      } else if (is.na(hba1c) || is.na(glucose_000) || is.na(glucose_120)) {
+        
+      }  else if (is.na(glucose_000) || is.na(glucose_120) || (use_hba1c_pre && is.na(hba1c))) {
         result <- NA
-      } else if ((glucose_000 >= 100 && glucose_000 < 126) ||
-                 (glucose_120 >= 140 && glucose_120 < 200) ||
-                 (hba1c >= 5.7 && hba1c < 6.5)) {
-        if (details) {
-          if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 < 140) {
-            result <- "iIFG"
-          } else if (glucose_120 >= 140 && glucose_120 < 200 && glucose_000 < 100) {
-            result <- "iIGT"
-          } else if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
-            result <- "IFG+IGT"
+      } else {
+        # Check for prediabetes criteria
+        prediabetes_criteria <- (glucose_000 >= 100 && glucose_000 < 126) ||
+                               (glucose_120 >= 140 && glucose_120 < 200)
+        
+        # Add HbA1c criteria for prediabetes only if use_hba1c_pre is TRUE
+        if (use_hba1c_pre && !is.na(hba1c) && hba1c >= 5.7 && hba1c < 6.5) {
+          prediabetes_criteria <- TRUE
+        }
+        
+        if (prediabetes_criteria) {
+          if (details) {
+            if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 < 140) {
+              result <- "iIFG"
+            } else if (glucose_120 >= 140 && glucose_120 < 200 && glucose_000 < 100) {
+              result <- "iIGT"
+            } else if (glucose_000 >= 100 && glucose_000 < 126 && glucose_120 >= 140 && glucose_120 < 200) {
+              result <- "IFG+IGT"
+            } else if (use_hba1c_pre && !is.na(hba1c) && hba1c >= 5.7 && hba1c < 6.5 && 
+                      glucose_000 < 100 && glucose_120 < 140) {
+              result <- "HBA1C"
+            } else {
+              result <- "PRE"
+            }
           } else {
-            result <- "HBA1C"
+            result <- "PRE"
           }
         } else {
-          result <- "PRE"
+          result <- "NGT"
         }
-      } else {
-        result <- "NGT"
       }
     }
     
     # WHO Classification
     if (system == "WHO") {
-      if ((!is.na(glucose_000) && glucose_000 >= 126) ||
-          (!is.na(glucose_120) && glucose_120 >= 200)) {
+      # Check for diabetes criteria
+      diabetes_criteria <- (!is.na(glucose_000) && glucose_000 >= 126) || 
+                           (!is.na(glucose_120) && glucose_120 >= 200)
+      
+      # Add HbA1c criteria for diabetes only if use_hba1c_dia is TRUE
+      if (use_hba1c_dia && !is.null(hba1c) && !is.na(hba1c) && hba1c >= 6.5) {
+        diabetes_criteria <- TRUE
+      }
+      
+      if (diabetes_criteria) {
         result <- "DIA"
       } else if (is.na(glucose_000) || is.na(glucose_120)) {
         result <- NA
@@ -144,3 +175,5 @@ classify_glycemia <- function(glucose_000, glucose_120, hba1c = NULL, system = "
   
   return(results)
 }
+
+

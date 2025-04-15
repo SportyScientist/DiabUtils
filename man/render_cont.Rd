@@ -2,10 +2,28 @@
 % Please edit documentation in R/table1.R
 \name{render_cont}
 \alias{render_cont}
-\title{Continuos Variable Rendering}
+\title{Continuous Variable Rendering for Table 1}
 \usage{
-render_cont(x, summary_type = c("median", "mean", "both"), n_signif)
+render_cont(x, summary_type = c("median", "mean", "both"), digits = 1)
+}
+\arguments{
+\item{x}{A vector of numeric values}
+
+\item{summary_type}{Type of summary to display: "median" (median and IQR), "mean" (mean and SD), or "both"}
+
+\item{digits}{Number of decimal places for rounding}
+}
+\value{
+A character vector with formatted summary statistics
 }
 \description{
-To be used in Table 1 package
+A render function for continuous variables to be used with the table1 package.
+This function formats continuous variables with customizable summary statistics.
+}
+\examples{
+\dontrun{
+  library(table1)
+  table1(~ age + weight | group, data = mydata, 
+         render.continuous = function(x) render_cont(x, "median", 2))
+}
 }

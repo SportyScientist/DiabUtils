@@ -6,7 +6,22 @@
 \usage{
 pvalue(x, ...)
 }
+\arguments{
+\item{x}{A list of vectors to compare}
+
+\item{...}{Additional arguments}
+}
 \description{
 To be used in Table 1 package
-Excludes "overall" column so that the p-value doesn't get calculated on that. Performs t-test for 2 variables, and anova for 3+ variable, chi square for categorical variables.
+Excludes "overall" column so that the p-value doesn't get calculated on that. 
+Performs appropriate statistical tests based on data type and number of groups:
+- For numeric data: Wilcoxon/Kruskal-Wallis for non-parametric tests
+- For categorical data: chi-square test
+}
+\examples{
+\dontrun{
+  library(table1)
+  table1(~ age + weight | group, data = mydata, 
+         extra.col = list(pval = pvalue))
+}
 }
